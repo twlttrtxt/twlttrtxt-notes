@@ -1,0 +1,70 @@
+site_name: Notes of twlttrtxt
+site_url: https://twlttrtxt.github.io/twlttrtxt-notes/
+theme:
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  icon:
+    annotation: material/arrow-right-bold
+  features:
+    - content.code.copy
+    - content.code.annotate
+    - navigation.footer
+    - navigation.instant
+    - navigation.instant.progress
+    - header.autohide
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: orange
+      accent: deep orange
+      toggle:
+        icon: material/eye
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: orange
+      accent: deep orange
+      toggle:
+        icon: material/eye-closed
+        name: Switch to light mode
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/twlttrtxt
+    - icon: simple/hackthebox
+      link: https://app.hackthebox.com/public/users/2030769
+    - icon: simple/tryhackme
+      link: https://tryhackme.com/p/twlttrtxt
+
+plugins:
+  - search:
+      enabled: true
+  - tags:
+      enabled: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - def_list
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  
