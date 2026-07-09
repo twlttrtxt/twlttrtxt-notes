@@ -192,3 +192,27 @@ And in the text editor, i can usually issue commands in the form of `:wq`(write 
 :!/bin/bash
 ```
 ... it spawns a new bash as the user which was running the `vi` process (which was `root`). This shell can then be used to read `/root/root.txt`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[FTP<br>service] -->|Anonymous<br>access| B[Protected<br>ZIP-file];
+  B -->|Crack| C[Valid<br>credentials];
+
+  D[HTTP<br>service] -->|Use credentials| E[Back-end<br>access]
+  E -->|SQL-injection| F[OS-Command<br>execution];
+
+  G[OS-Command<br>execution] -->|Read| H[Config<br>file]
+  H -->|Use credentials| I[SSH-access]
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[vi];
+  B -->|spawn bash| D[Command<br>execution<br>as root];
+```

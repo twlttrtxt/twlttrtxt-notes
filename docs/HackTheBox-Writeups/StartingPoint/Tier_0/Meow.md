@@ -40,4 +40,13 @@ After using that command with the variable `$IP` and the port `23`, we are prese
 Meow login: 
 ```
 
-A brute-forcing attempt using the tool `hydra`, or the `nmap` script `telnet-brute` can now be started against this login. Although possible, it is always wiser to try simple login combinations such as `administrator:password`, `admin:admin`, or `root:root`. It turns out, that the username `root` does not require a password, and simply lets you execute `telnet` commnads on the target with elevated privileges.
+A brute-forcing attempt using the tool `hydra`, or the `nmap` script `telnet-brute` can now be started against this login. Although possible, it is always wiser to try simple login combinations such as `administrator:password`, `admin:admin`, or `root:root`. It turns out, that the username `root` does not require a password, and simply lets you execute `telnet` commands on the target with elevated privileges.
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[FTP<br>service] -->|Weak<br>credentials| B[telnet command<br>execution];
+```

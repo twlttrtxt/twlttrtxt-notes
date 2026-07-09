@@ -111,3 +111,13 @@ If you wish to add more headers, it works like this:
 ":H=Cookie\: PHPSESSID=loremipsum:H=Origin\: http\://10.10.10.10:H=Referer\: http\://10.10.10.10/login.php"
 ```
 ... within the second part
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[FTP<br>service] -->|Anonymous<br>access| B[Credentials];
+  C[HTTP<br>service] -->|Credential<br>stuffing| D[Backend<br>access]
+```

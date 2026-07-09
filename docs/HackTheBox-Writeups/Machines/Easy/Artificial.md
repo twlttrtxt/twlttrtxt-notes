@@ -206,3 +206,26 @@ cp /bin/bash /home/gael/rootme; chmod u+s /home/gael/rootme
 If this command were to be executed by `root`, i receive the binary `rootme` in `gaels` home directory, which starts a new `bash` as `root`!
 
 I try to execute this command by pressing the `Prune Now` button on my custom repository. And voila, i receive an `rootme`, which elevates me to `root` when executing it using `./rootme -p`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|File<br>upload| B[.h5<br>File];
+  B -->|Lambda| C[Python-code<br>execution];
+
+  D[Python-code<br>execution] -->|read| E[SQLite3<br>database];
+  E -->|Hash<br>cracking| F[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Read<br>permission| B[Backup<br>File];
+  B -->|Hash<br>cracking| C[localhost<br>application];
+  A -->|Port<br>forwarding| C[localhost<br>application];
+  C -->|intended<br>functionality| D[Command<br>execution<br>as root];
+```

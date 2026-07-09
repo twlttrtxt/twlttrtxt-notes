@@ -246,3 +246,19 @@ Alternatively, you can simply edit the password of the existing `administrator` 
 db.admin.update({"_id": <admins-ID>},{$set:{"x_shadow":"$6$S1T0uYEF.r9PmihP$UR1iCN3Akhpp8U5GfNREIlb8JiA8i3jWYrcPNmUc/QL9hhqQDQcf8hlU5MWIcN69bi8sWibIJtJ5J9091sL101"}})
 ```
 This is pretty convenient, but a no-go in real-life scenarios, as the `administrator` will panic if he can't log in anymore. A shadow admin account is much stealthier.
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|JNDI-injection| B[Java-code<br>execution];
+  B -->|Access| C[MongoDB<br>service];
+  C -->|Add<br>Shadow-admin| D[Elevated<br>privileges];
+
+  E[Elevated<br>privileges] -->|Reveal| F[Credentials]
+  F -->|Use| G[SSH-access]
+```
+
+Alternatively, the password of the existing Admin may be altered instead of adding a shadow admin.

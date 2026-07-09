@@ -121,3 +121,12 @@ admin> db.system.version.find()
 
 To get the flag, print all values from the collection `flag` of the database `sensitive_information`!
 The `mongosh` installation can now be easily reverted using `rm -rf mongosh-*`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[MongoDB<br>service] -->|Unauthenticated<br>access| B[Database<br>access];
+```

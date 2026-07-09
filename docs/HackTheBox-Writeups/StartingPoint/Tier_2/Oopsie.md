@@ -232,3 +232,26 @@ To revert the `$PATH` to its original state, issue this command as `robert`, whe
 ```bash
 export PATH="$OLDPATH"
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|IDOR| B[Elevated<br>privileges];
+  B -->|Upload| C[PHP-code];
+
+  D[PHP-code] -->|Read| E[Config-file];
+  E -->|Use credentials| F[SSH-access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH-access] -->|Belongs to| B[bugtracker Group];
+  B -->|SUID<br>binary| D[bugtracker];
+  A -->|PATH<br>hijack| D;
+  D -->|Execute| E[OS-code<br>execution<br>as root];
+```

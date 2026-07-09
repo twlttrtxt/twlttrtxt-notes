@@ -84,3 +84,25 @@ I try the three main privilege escalation vectors:
 ```bash
 mosh '--server=sudo mosh-server' localhost /bin/sh
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[SNMP<br>Service] -->|Reveals| B[Daloradius<br>service];
+  C[HTTP<br>Service] -->|Default<br>credentials| B;
+  B -->|Reveals| D[Cleartext<br>credentials];
+  D -->|Use| E[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[mosh-server];
+  B -->|Start| C[sudo<br>mosh-server];
+  A -->|Connect| C;
+  C --> D[Command<br>execution<br>as root]
+```

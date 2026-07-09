@@ -175,3 +175,25 @@ And lastly, this command makes `enlightenment_sys` execute the `/tmp/exploit` bi
 ```
 
 Executing `./rootme -p` in `/home/larissa` now gives shell access as `root`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|Default<br>credentials| B[Vulnerable<br>software];
+  B -->|Code<br>injection| C[PHP-code<br>execution];
+
+  D[PHP-code<br>execution] -->|read| E[Config<br>file];
+  E -->|Passsword<br>reuse| F[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|SUID<br>permission| B[Vulnerable<br>binary];
+  B -->|Path<br>traversal| C[Custom<br>binary];
+  C --> D[Command<br>execution<br>as root];
+```

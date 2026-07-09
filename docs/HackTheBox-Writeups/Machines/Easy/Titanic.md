@@ -211,3 +211,22 @@ gcc evil.c -shared -fPIC -o ./libxcb.so.1
 Then, i can move this library to `/opt/app/static/assets/images/`, as i have write permissions there!
 
 After waiting for a few seconds, i receive the `rootme` binary which i can use with `./rootme -p` to elevate `developer` to `root`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|LFI| B[SQLite3<br>database];
+  B -->|Hash<br>cracking| C[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Path<br>hijack| B[magick];
+  C[root] -->|Cron<br>job| B[magick];
+  B -->|DLL<br>hijack| D[Command<br>execution<br>as root];
+```

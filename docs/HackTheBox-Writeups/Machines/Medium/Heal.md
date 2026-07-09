@@ -251,3 +251,27 @@ subprocess.run(["/home/ron/rootme", "-p"])
 ```
 
 This script automatically registers a malicious service, which copies `bash` to `rons` home directory, sets its `SetUID`, and then removes the service for cleanup. This effectively gives `ron` `root` access!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|LFI| B[SQLite3<br>database];
+  B -->|Hash<br>cracking| C[Valid<br>credentials];
+
+  D[Hidden<br>HTTP<br>service] -->|Use credentials| E[Limesurvey];
+  E -->|Upload| F[PHP Code];
+
+  G[PHP Code] -->|Read| H[Config<br>file]
+  H -->|Access| I[SSH<br>Service]
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Port<br>forwarding| B[localhost<br>application];
+  B -->|intended<br>functionality| C[Command<br>execution<br>as root];
+```

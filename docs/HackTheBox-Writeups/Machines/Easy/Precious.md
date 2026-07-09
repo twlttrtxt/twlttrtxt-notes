@@ -182,3 +182,22 @@ This `gadget-chain` uses the entry `git_set` to execute `OS` commands! Issuing `
 uid=0(root) gid=0(root) groups=0(root)
 ```
 ... confirming my suspicions. Changing the `id` command to `bash` gives me a terminal as `root`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|Ruby<br>injection| B[OS-code<br>execution];
+  B -->|Read| C[Config<br>file];
+  C -->|Use<br>credentials| D[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[update_dependencies.rb];
+  B -->|Insecure<br>deserialization| C[Command<br>execution<br>as root];
+```

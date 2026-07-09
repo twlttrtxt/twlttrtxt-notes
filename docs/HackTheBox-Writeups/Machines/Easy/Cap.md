@@ -133,3 +133,22 @@ It turns out that the `/usr/bin/python3.8` binary (presumably the one running th
 /usr/bin/python3.8 -c 'import os; os.setuid(0); os.execl("/bin/bash", "bash")'
 ```
 This instantly elevates the user to `root`, allowing to read the `/root/root.txt`.
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|File<br>read| B[PCAP<br>file];
+  B -->|IDOR| C[Nathan's<br>credentials];
+  C -->|Password<br>reuse| D[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] --> B[Python<br>binary];
+  B -->|CAP_SETUID| C[Command<br>execution<br>as root];
+```

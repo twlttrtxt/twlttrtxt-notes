@@ -315,3 +315,26 @@ Please choose (S/V/K/I/C): v
 ```
 
 When in the `less` command, you can simply type `!/bin/bash` to receive a bash environment as the user which started this command (`root`).
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[Hidden<br>HTTP<br>Service] -->|Unauthenticated<br>access| B[Config<br>API];
+  B --> C[Back-end];
+  C -->|Upload| D[PHP<br>code];
+
+  E[PHP<br>code] -->|read| F[MySQL<br>database];
+  F -->|Hash<br>cracking| G[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[apport-cli];
+  B -->|calls| C[less];
+  C -->|open shell| D[Command<br>execution<br>as root];
+```

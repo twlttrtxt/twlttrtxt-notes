@@ -160,3 +160,24 @@ Googling this version reveals the two `CVE's` `CVE-2021-4034` and `CVE-2021-3560
 As the timing with this can be very delicate, a [PoC on Exploit-DB](https://www.exploit-db.com/exploits/50011) will automatically abuse this. I deploy this `exploit.sh` on the machine, make it executable with `chmod +x exploit.sh` and run it with `./exploit.sh`.
 
 After succeeding, i am able to `su - hacked` to the new account with the password `password`. That account is then allowed to run `sudo su`, which instantly gives him `root` access!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|WordPress<br>vulnerability| B[Secret<br>leak]
+  B -->|Login| C[Hidden<br>HTTP<br>Service];
+  B -->|Register| D[Hidden<br>Registration];
+  C -->|Arbitrary<br>file-read| E[Config<br>file];
+  E -->|Password<br>reuse| F[SSH<br>access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>access] -->|Access| B[vulnerable<br>polkit];
+  B -->|Bypass<br>credential-check| D[Switch user<br>to root];
+```

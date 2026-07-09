@@ -130,3 +130,13 @@ evil-winrm -i $IP -u Administrator -p <password>
 ```
 
 After logging on, the flag can be found on the desktop of the user `mike` (so that you cant read the `flag.txt` using the LFI).
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|SMB-coercion| B[NTLMv2<br>Hash];
+  B -->|Hash<br>cracking| C[WinRM<br>access];
+```

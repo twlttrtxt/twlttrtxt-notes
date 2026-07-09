@@ -290,3 +290,28 @@ sudo bee eval "system('/bin/bash')"
 ```bash
 # or use with option --root=/var/www/html if you aren't in Backdrop CMS's root directory
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|Exposed<br>.git| B[Cleartext<br>password];
+  A -->|Username<br>brute-force| C[Cleartext<br>username];
+  B --> D[Backdrop CMS];
+  C --> D[Backdrop CMS];
+  D -->|Upload| E[PHP<br>code];
+
+  F[PHP<br>code] -->|read| G[Config<br>file];
+  G -->|Password<br>reuse| H[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[bee];
+  B -->|php-eval| C[Arbitrary<br>input];
+  C -->|system| D[Command<br>execution<br>as root];
+```

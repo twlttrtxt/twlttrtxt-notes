@@ -74,3 +74,13 @@ With the login, i can access the infamous `Jenkins Groovy Script Console` under 
 println "whoami".execute().text
 ```
 And it prints `root`! I can then use `cat /root/flag.txt` to view it!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|Weak<br>credentials| B[Jenkins<br>access];
+  B -->|Console access| C[Arbitrary<br>Java-code<br>execution];
+```

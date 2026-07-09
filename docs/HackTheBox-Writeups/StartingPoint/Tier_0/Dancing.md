@@ -124,3 +124,12 @@ ftp> cd
 ftp> get flag.txt
 # get: downloads the specified file onto the local PC.
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[SMB<br>service] -->|Guest Access| B[File read];
+```

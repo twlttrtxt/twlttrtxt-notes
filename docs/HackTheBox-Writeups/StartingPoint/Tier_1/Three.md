@@ -224,3 +224,13 @@ To read the flag, i have stepped into the directory `/home/svc`, but there wasn'
 http://thetoppers.htb/evil.php?cmd=find%20/%20-name%20flag.txt
 ```
 After finding it, i can simply read it.
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[Hidden<br>HTTP<br>service] -->|Weak<br>credentials| B[Amazon S3<br>bucket];
+  B -->|PHP upload| C[Arbitrary<br>PHP-code<br>execution];
+```

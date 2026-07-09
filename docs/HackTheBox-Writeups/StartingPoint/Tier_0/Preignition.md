@@ -46,3 +46,12 @@ dirb http://$IP
 ```
 
 This page displays an "Admin Console Login", where the user is asked for credentials. My first approach of trying default credentials such as `root:root` or `admin:admin` worked instantly, as `admin:admin`was a correct combination of credentials. The flag is displayed on the screen!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|Weak<br>credentials| B[Backend<br>access];
+```

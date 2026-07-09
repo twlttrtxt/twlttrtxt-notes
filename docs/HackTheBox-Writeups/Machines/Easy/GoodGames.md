@@ -178,3 +178,25 @@ chown root:root /home/augustus/rootme
 chmod u+s /home/augustus/rootme
 ```
 Going back to `ssh augustus@$Internal-IP`, i can become root by executing `./rootme -p`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|SQL<br>Injection| B[Valid<br>credentials];
+  B -->|login| C[Hidden<br>HTTP<br>Service];
+  C -->|SSTI| D[Python-code<br>execution];
+
+  E[Python-code<br>execution] -->|Docker<br>escape| F[SSH<br>access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[Python-code<br>execution] -->|write binary<br>as root| B[home<br>directory];
+  C[SSH<br>access] -->|use<br>binary| B[home<br>directory];
+  B --> D[Command<br>execution<br>as root];
+```

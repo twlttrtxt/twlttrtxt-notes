@@ -244,7 +244,7 @@ internal.excavate: Custom yara rules file is NOT a file. Will attempt to treat i
 
 I tried reading `/root/.ssh/id_rsa`, but that did not exist. I also read `/etc/shadow` to try and crack it but it somehow doesn't work. I could also simply read `/root/root.txt` but that is cheating (didn't get RCE) and cheating is bad!
 
-Further googling reveals [this seclists disclosure](https://seclists.org/fulldisclosure/2025/Apr/19). It tells us that `bbot` version `2.1.0` (the version running on the machine) allows you to load custom modules (python code), which enable arbitrary python code execution. To so, a `preset.yml` is required, which tells `bbot` to load the custom module. I create the following module `evil.py` which creates a copy of `/bin/bash` and sets the `SetUID` flag. As this python code is executed as root, its a free `bash` as `root`! The code looks as follows:
+Further googling reveals [this seclists disclosure](https://seclists.org/fulldisclosure/2025/Apr/19). It tells us that `bbot` version `2.1.0` (the version running on the machine) allows you to load custom modules (python code), which enables arbitrary python code execution. To so, a `preset.yml` is required, which tells `bbot` to load the custom module. I create the following module `evil.py` which creates a copy of `/bin/bash` and sets the `SetUID` flag. As this python code is executed as root, its a free `bash` as `root`! The code looks as follows:
 ```python
 from bbot.modules.base import BaseModule
 import os
@@ -256,7 +256,6 @@ class evil(BaseModule):
 Then i slightly change the `bbot_preset.yml` to make it use my custom module:
 ```yml
 targets:
-
   - ecorp.htb
 
 output_dir: /home/graphasm/bbot_scans
@@ -268,11 +267,9 @@ config:
       password: cU4btyib.20xtCMCXkBmerhK
 
 module_dirs:
-
   - .
 
 modules:
-
   - evil
 
 ```
@@ -311,3 +308,25 @@ ssh -L 1337:localhost:8000 graphasm@$IP
 It turns out that this was the `API` endpoint which was used for logging on etc...
 
 The other two ports `7687` and `7474` turned out to be `neo4j` specific ports. Sadly the comment with the user `TheFunky1` didn't help in this challenge...
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|Cypher<br>injection| B[Authentication<br>bypass];
+  B -->|Access| C[Arbitrary<br>Cypher-queries];
+
+  D[Vulnerable<br>Apoc-extension] -->|OS-Command<br>injection| E[OS-Command<br>execution];
+  E -->|Read| F[.bash_history]
+  F-->|Use<br>credentials| G[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[bbot];
+  B -->|Load<br>custom<br>Python-code| D[Command<br>execution<br>as root];
+```

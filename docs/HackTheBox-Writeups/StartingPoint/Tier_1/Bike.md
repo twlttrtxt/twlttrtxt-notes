@@ -123,3 +123,12 @@ sstimap -u "http://$IP" -d "email=123&action=Submit"
 ```
 
 This seemingly tried more than `tinja`, but ultimately failed. I looked into the options, and i can increase the risk level using `-l 5`, but that does't make sense, as i have looked through its modules using `sstimap --module list`, and `handlebars` was not in there. Therefore, it can not identify `handlebar` SSTI vulnerabilities ([Proof here](https://github.com/vladko312/SSTImap/issues/13)).
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|SSTI| B[OS-command<br>execution];
+```

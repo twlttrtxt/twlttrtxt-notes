@@ -60,7 +60,7 @@ That lead me to the [redis docs](https://redis.io/docs/latest/develop/tools/cli/
 4) "stor"
 ```
 
-The following info was taken from [this stackoverflow question](https://stackoverflow.com/questions/8078018/get-redis-keys-and-values-at-command-prompt).Using `redis`, fetching the values to these keys is a bit more nuanced, as you will need to know the type of value which is stored. To find out the type of value which is stored in a key, you can issue the command `TYPE <key>`. To fetch the values for specific types, you will need these respective commands:
+The following info was taken from [this stackoverflow question](https://stackoverflow.com/questions/8078018/get-redis-keys-and-values-at-command-prompt). Using `redis`, fetching the values to these keys is a bit more nuanced, as you will need to know the type of value which is stored. To find out the type of value which is stored in a key, you can issue the command `TYPE <key>`. To fetch the values for specific types, you will need these respective commands:
 
 - `string`-type: `GET <key>`
 - `hash`-type: `HGETALL <key>`
@@ -69,3 +69,12 @@ The following info was taken from [this stackoverflow question](https://stackove
 - `zset`-type: `ZRANGE <key> 0-1 WITHSCORES`
 
 In the CTF, the values are mostly strings, so the flag can be retrieved using the command `GET flag`.
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[Redis<br>service] -->|Unauthenticated<br>access| B[Database<br>access];
+```

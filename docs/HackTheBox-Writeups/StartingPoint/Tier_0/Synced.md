@@ -66,3 +66,12 @@ rsync $IP::pubic/flag.txt .
 # or
 rsync rsync://$IP/public/flag.txt .
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[Rsync<br>service] -->|Unauthenticated<br>access| B[File<br>read];
+```

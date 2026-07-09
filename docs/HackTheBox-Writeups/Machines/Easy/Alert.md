@@ -294,3 +294,24 @@ This creates a `/tmp/rootme` binary which is a copy of `/bin/bash` with the only
 ```bash
 # -p: do not reset effective user id! keep root
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|XSS| B[Another<br>User];
+  B -->|SSRF| C[Hidden<br>Endpoint];
+  C -->|Path<br>Traversal| D[Config<br>file];
+  D -->|Hash<br>cracking| E[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Writeable<br>PHP-file| B[localhost<br>application];
+  C[root] -->|Cron-job| B[localhost<br>application];
+  B -->|Malicious<br>PHP-code| D[Executed<br>as root];
+```

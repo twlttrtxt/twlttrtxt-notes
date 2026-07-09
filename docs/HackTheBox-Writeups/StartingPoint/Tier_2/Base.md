@@ -130,3 +130,24 @@ And `john` is allowed to use `/usr/bin/find` as `root`! On [GTFOBins](https://gt
 ```bash
 find . -exec /bin/sh \; -quit
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|Insecure strcmp| B[Authentication<br>bypass];
+  B -->|Upload| C[Arbitrary<br>PHP-code];
+  
+  D[Arbitrary<br>PHP-code] -->|Read| E[Config<br>file];
+  E -->|Password<br>reuse| F[SSH-access]
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[find];
+  B -->|execute| D[Command<br>execution<br>as root];
+```

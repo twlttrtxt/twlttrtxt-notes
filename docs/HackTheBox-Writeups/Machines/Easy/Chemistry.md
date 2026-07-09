@@ -192,3 +192,25 @@ This can then be attempted to be cracked using
 john --wordlist=./rockyou.txt hash.txt
 ```
 But this didn't work. The approach of stealing the `ssh` private key works!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|File<br>upload| B[CIF<br>File];
+  B -->|Injection| C[Python-code<br>execution];
+
+  D[Python-code<br>execution] -->|read| E[SQLite3<br>database];
+  E -->|Hash<br>cracking| F[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Port<br>forwarding| B[vulnerable<br>application];
+  B -->|Path<br>traversal| C[root's<br>SSH-key];
+  C --> D[SSH<br>access];
+```

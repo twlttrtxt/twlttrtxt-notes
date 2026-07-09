@@ -210,3 +210,23 @@ nc -lvnp 1337
 ```
 
 ... and wait for the `Administrator` reverse shell (which i receive after ~5 seconds)! The flag can be read using `type C:\Users\Administrator\Desktop\root.txt`.
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|Weak<br>credentials| B[Back-end<br>access];
+  B -->|XXE| C[Daniel's<br>SSH-key];
+  C -->|Use| D[SSH-access];
+```
+
+The privilege escalation to the user `Administrator` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH-access] -->|Write| B[job.bat];
+  C[Administrator] -->|Scheduled<br>task| B;
+  B --> D[OS-code<br>execution<br>as Administrator];
+```

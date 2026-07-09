@@ -267,3 +267,29 @@ I can use the right part of the `NTLM` hash to authenticate via `winrm`:
 ```bash
 evil-winrm -i fluffy.htb -u "fluffy.htb\administrator" -H 8da83a3fa618b6e3a00e93f676c92a6e
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[SMB<br>Service] -->|write| B[.library-ms<br>file];
+  B -->|SMB<br>coercion| C[NTLMv2<br>hash];
+  C -->|Hash<br>cracking| D[p.agila];
+
+  E[p.agila] -->|GenericAll| F[SERVICE<br>ACCOUNTS];
+  F -->|GenericWrite| G[Winrm_SVC];
+  G --> H[WinRM<br>Access];
+```
+
+The privilege escalation to the user `Administrator` worked as follows:
+
+``` mermaid
+graph LR
+  A[SERVICE<br>ACCOUNTS] -->|GenericWrite| B[CA_SVC];
+  B -->|Change<br>UPN| C[Administrator<br>impersonation];
+
+  D[Administrator<br>impersonation] -->|request<br>certificate| E[Administrator's<br>NT-Hash];
+  E --> F[WinRM<br>Access];
+```

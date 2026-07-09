@@ -105,3 +105,12 @@ set LHOST tun0 # use HTB VPN gateway instead of private IP
 run # execute the explot
 ```
 After a short wait i receive a command shell as `root`! I can read the `/home/makis/user.txt` and the `/root/root.txt` without needing to elevate my privileges!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE as `SYSTEM`.
+
+``` mermaid
+graph LR
+  A[SMB<br>Service] -->|OS-command<br>injection| B[Command<br>execution<br>as root];
+```

@@ -56,3 +56,12 @@ ftp> ls
 ftp> get flag.txt
 # lists the directory, and downloads the specified file onto the users PC
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[FTP<br>service] -->|Anonymous<br>access| B[File read];
+```

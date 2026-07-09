@@ -251,3 +251,25 @@ An fully automated `PoC` is available at [this GitHub](https://github.com/bipbop
 python3 exploit.py http://localhost:1337 admin slowmotionapocalypse
 ```
 Gives you a terminal as `root`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|IDOR| B[Valid<br>credentials];
+  B -->|Login| C[Admin<br>panel];
+  C -->|OS-Command<br>injection| D[Code<br>execution];
+
+  E[Code<br>execution] -->|read| F[SQLite3<br>database];
+  F -->|Hash<br>cracking| G[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>access] -->|Port<br>forwarding| B[localhost<br>application];
+  B -->|PHP-code<br>injection| D[Command<br>execution<br>as root];
+```

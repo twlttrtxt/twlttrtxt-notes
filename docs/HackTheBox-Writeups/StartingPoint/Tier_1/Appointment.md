@@ -77,3 +77,12 @@ After a while of waiting for the time-based SQL injection to finish, i got this 
 ![](../../../Images/HTB_Images/StartingPoint/Appointment.png)
 
 I used these two credential pairs to login, and got to the flag site without injecting SQL. Woo-Hoo! I was not able to gain command access to the machine through this injection point though.
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|SQL-injection| B[Authentication<br>bypass];
+```

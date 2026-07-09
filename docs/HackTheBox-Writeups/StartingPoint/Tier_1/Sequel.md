@@ -111,3 +111,12 @@ MariaDB [htb]> select * from users;
 4 rows in set (0.021 sec)
 ```
 The flag is then found in the config table from the `htb` database.
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[MariaDB<br>service] -->|Weak<br>credentials| B[Database<br>access];
+```

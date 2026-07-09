@@ -155,3 +155,22 @@ I can issue the command `background` to get back to the `metasploit` console, as
 This did not work somehow. I remembered that my `meterpreter` session was started from a `winrm` session. After some research i found out that `winrm` is a `service host process`, which means it has no `GUI`, meaning it is not a real interactive session of an actual user, limiting its capabilities. I go back into my session using `sessions -i 1` and issue the `ps` command. I notice that the `meterpreter.exe` call is not an interactive session `ID=0`, just as expected.
 
 I can use the `migrate` command of the `meterpreter` to jump to another process which may have a interactive GUI session! I quickly notice a `cmd.exe` process running, so i use `migrate <its-PID>`, and it worked. After `background-ing` this `meterpreter`, i `run` the `privesc` again and with success this time! A `meterpreter` session 2 has opened as `NT AUTHORITY\SYSTEM` (highest possible privilege)!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|File<br>upload| B[SCF<br>file];
+  B -->|SMB<br>coercion| C[NTLMv2<br>hash];
+  C -->|Hash<br>cracking| D[WinRM<br>access];
+```
+
+The privilege escalation to the user `SYSTEM` worked as follows:
+
+``` mermaid
+graph LR
+  A[WinRM<br>access] -->|write| B[Printer-driver<br>directory];
+  B -->|DLL<br>hijacking| C[Command<br>execution<br>as SYSTEM];
+```

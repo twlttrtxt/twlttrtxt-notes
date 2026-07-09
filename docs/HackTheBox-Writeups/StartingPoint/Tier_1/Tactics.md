@@ -88,3 +88,12 @@ smbclient -U 'Administrator' //$IP/C$
 ```
 
 Using this connection, i navigate to `C:\Users\Administrator\Desktop\` to `get` the `flag.txt`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[SMB<br>service] -->|Weak<br>credentials| B[File read];
+```

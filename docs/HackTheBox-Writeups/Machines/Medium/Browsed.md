@@ -228,3 +228,27 @@ dd if=/opt/extensiontool/__pycache__/extension_utils.cpython-312.pyc of=__pycach
 ```
 
 After this, i can copy the custom `.pyc` file into the `/opt/extensiontool/__pycache__` directory, and execute the `extension_tool.py` as `root` again. This causes python to load my custom byte-code and execute it, which results in the binary `/home/larry/rootme`, which i can use to gain `root` with the flag `-p` added!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|File<br>upload| B[Chrome<br>extension];
+  B -->|XSS| C[localhost<br>application];
+
+  D[localhost<br>application] -->|OS-Command<br>injection| E[OS-Command<br>execution];
+  E -->|Read| F[Larry's<br>SSH-key]
+  F-->|Use| G[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[extension_tool.py];
+  A[SSH<br>Access] -->|Write| C[__pycache__];
+  B -->|pycache<br>poisoning| D[Command<br>execution<br>as root];
+  C -->|pycache<br>poisoning| D[Command<br>execution<br>as root];
+```

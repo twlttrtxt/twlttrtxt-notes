@@ -183,3 +183,25 @@ The binary can then be copied to the desired directory with this `scp` command:
 scp ./run-parts jkr@$IP:/usr/local/sbin/run-parts
 ```
 And logging on via `ssh` instantly executes this code, as it was executable to begin with!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|Access| B[robots.txt];
+  B -->|Reveals| C[Hidden<br>endpoint];
+
+  D[Hidden<br>endpoint] -->|SQL-injection| E[Hashed<br>credentials];
+  E -->|Hash<br>cracking| F[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|PATH<br>hijack| B[run-parts];
+  C[root] -->|Executes| B;
+  B --> D[Command<br>execution<br>as root]
+```

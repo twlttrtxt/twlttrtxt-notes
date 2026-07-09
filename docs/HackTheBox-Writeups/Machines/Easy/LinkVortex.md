@@ -230,3 +230,33 @@ It turns out that the `CHECK_CONTENT` variable can be an arbitrary command, as i
 ```bash
 CHECK_CONTENT=bash sudo /usr/bin/bash /opt/ghost/clean_symlink.sh test.png
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[Hidden<br>HTTP<br>Service] -->|Exposed<br>.git| B[Cleartext<br>credentials];
+  B -->|Login| C[Ghost<br>Back-end];
+  C -->|Arbitrary<br>file-read| D[Config<br>file];
+  D -->|Password<br>reuse| E[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[clean_symlink.sh];
+  B -->|Uses on<br>arbitrary input| C[cat];
+  B -->|Race<br>condition| D[root's<br>SSH-key];
+  D -->|use| E[SSH<br>Access];
+```
+
+Alternatively, OS-command injection can be abused on the arbitrary user input:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[clean_symlink.sh];
+  B -->|OS-command<br>injection| C[Command<br>execution<br>as root];
+```

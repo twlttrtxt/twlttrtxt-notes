@@ -145,3 +145,19 @@ xfreerdp3 /u:Administrator /p: /w:1366 /h:768 /v:$IP
 
 There, you can then open and read the flag on the desktop:
 ![](../../../Images/HTB_Images/StartingPoint/Explosion.png)
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[SMB<br>service] -->|Weak<br>credentials| B[File read];
+```
+
+Or alternatively,
+
+``` mermaid
+graph LR
+  A[Remote<br>Desktop<br>service] -->|Weak<br>credentials| B[System access];
+```

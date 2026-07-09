@@ -131,3 +131,12 @@ I could manually count the characters of each entry out of the 10.000 and delete
 The new file is almost 60% smaller! Using this new file, i issue the previous `ffuf` scan again.
 When this did not work either, i decided to have a peek at the hints of the challenge. There was a question to google the most common passwords of 2023, which made me stumble upon a top 10 list. The required password was in that list (but also in my shortened down `short-most-common.txt`, so brute forcing does not work).
 That's a bit disappointing, as i try to solve challenges without having to take a look at the hints. Still, i've learned valuable things from this challenge!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[HTTP<br>service] -->|Weak<br>credentials| B[Back-end<br>access];
+```

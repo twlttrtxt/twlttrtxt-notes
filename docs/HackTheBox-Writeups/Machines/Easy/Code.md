@@ -176,3 +176,26 @@ I could now read the `./root/root.txt` (`Booooo...`), but code execution as `roo
 ssh -i root/.ssh/id_rsa root@localhost
 ```
 This uses `root`'s private key to `ssh` into the machine as him!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] --> B[Restricted<br>Python<br>execution];
+  B -->|Sandbox<br>bypass| C[Python<br>execution];
+
+  D[Python<br>execution] -->|read| E[SQLite3<br>database];
+  E -->|Hash<br>cracking| F[SSH<br>Access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>Access] -->|Sudo<br>permission| B[Custom<br>binary];
+  B -->|ZIP<br>archive| C[Intended<br>directory];
+  B -->|Path<br>traversal| D[root's<br>directory];
+  D -->|SSH<br>key| E[SSH<br>Access];
+```

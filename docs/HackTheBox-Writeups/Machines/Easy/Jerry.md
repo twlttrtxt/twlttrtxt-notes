@@ -59,3 +59,13 @@ run # start the exploit!
 Within the `meterpreter >` session i can execute the command `shell` to get a `shell` on the system!
 
 I navigate to `C:\Users\Administrator\Desktop\flags`, where i can issue the command `type "2 for the price of 1.txt"` to get the `user.txt` and the `root.txt` at the same time! `whoami` reveals that i have a shell as `NT Authority\System` which is the highest possible privilege on a `Windows` machine, so the `Lateral Movement` and `Privilege Escalation` paths become unnecessary. 
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine to gain RCE as `SYSTEM`.
+
+``` mermaid
+graph LR
+  A[HTTP<br>Service] -->|Weak<br>credentials| B[Tomcat<br>backend];
+  B -->|upload| C[Custom<br>Java<br>code];
+```

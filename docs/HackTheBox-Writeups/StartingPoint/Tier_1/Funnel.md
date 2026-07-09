@@ -158,3 +158,14 @@ Now, any tool can be used on the target system by simply pre-pending `proxychain
 ```bash
 proxychains4 psql -h localhost -p 5432 -U christine
 ```
+
+### Summary
+
+Below is a visualized summary of the exploitation steps used in this machine.
+
+``` mermaid
+graph LR
+  A[FTP<br>service] -->|Anonymous<br>access| B[Credentials];
+  C[SSH<br>service] -->|Password<br>spray| D[SSH<br>access];
+  D -->|Port<br>forwarding| E[PostgreSQL<br>service]
+```
