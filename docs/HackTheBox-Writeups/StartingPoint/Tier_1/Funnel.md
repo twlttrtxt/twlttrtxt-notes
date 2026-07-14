@@ -94,7 +94,7 @@ netstat -tulnp
 ```
 
 and i see this:
-![](../../../Images/HTB_Images/StartingPoint/Funnel.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Funnel.png)
 
 The ports `21` and `22` are open for everyone, which is displayed via the local address being `0.0.0.0` (or `:::` for `IPv6`). This is a reserved IP address, which basically means `everyone` is allowed to access this.
 
@@ -135,7 +135,7 @@ psql -h localhost -p 2345 -U christine
 
 This worked! Using the `\?` command, more information about the `PostgreSQL` specific commands can be read. The alternative to `show databases` is `\l`. Changing the database works with `\c` instead of `use`. For `show tables`, it is `\dt+`. The rest are standard SQL statements.
 The full workflow can be seen below:
-![](../../../Images/HTB_Images/StartingPoint/Funnel2.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Funnel2.png)
 
 #### Alternative way
 I've also wanted to show how it works with dynamic port forwarding. To do that, issue this command when logging on via `ssh`:

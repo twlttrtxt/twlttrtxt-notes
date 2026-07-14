@@ -63,7 +63,7 @@ On the Uploads page i can upload a `Branding Image`. I prepare a file called `ev
 ```
 
 I choose the file and click upload, but i make sure to intercept this request, as i can send it to `burp`s repeater to make modifications to it (don't forget to edit the cookies).
-![](../../../Images/HTB_Images/StartingPoint/Oopsie.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Oopsie.png)
 
 To my surprise, it has been uploaded without nagging about the file extension. The next step is to find out where this file landed, so it can be rendered, which would give me RCE. My first guess would have been `/uploads`, but i still couldn't access it (not even directly with `/uploads/evil.php`).
 

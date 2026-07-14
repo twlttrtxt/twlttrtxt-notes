@@ -229,7 +229,7 @@ It is also nice that you can simply re-establish the connection by executing thi
 
 ### Privilege Escalation
 For windows machines, my first guess is always to find out what privileges my user has, as there are many options to enable privilege escalation if they are mis-configured. To find these privileges, the command `whoami /all` (or more specifically, `whoami /priv`) can be used. It outputs the following for the current user:
-![](../../../Images/HTB_Images/StartingPoint/Archetype.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Archetype.png)
 
 This privilege means that the current user is allowed to impersonate (act as) a security token which belongs to another user. If you manage to get a process to connect to you which has high privileges, you essentially can execute commands as that privileged process. There are a few tools which automate the exploitation of forcing a high-privileged process to connect to you (e.g. endpoint you control), capturing its token and impersonating it.
 

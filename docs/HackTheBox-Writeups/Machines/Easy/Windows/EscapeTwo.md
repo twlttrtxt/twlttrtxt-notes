@@ -3,7 +3,7 @@ tags:
   - Windows
   - SMB
   - MSSQL
-  - bloodhound
+  - DACL Abuse
 ---
 
 ... is a easy assumed-breach HTB machine, where the provided credentials can be used to fetch files from a `SMB` service. These files provide multiple credentials, one of which is able to access the `mssql` service as a privileged user and obtain RCE. A config file then leads to actual `winrm` access. For the privilege escalation, the current user has write-permissions over a `CA_SVC` account, which can modify a certificate to be vulnerable.
@@ -137,7 +137,7 @@ vd accounts.xlsx
 Doing so gives me an error message on both files: `Oh dear! BadZipFile: Bad magic number for file header`. To fix this error, i find out what the magic number (file signature) for `xlsx` files is by googling. It turns out to be `50 4B 03 04`. Viewing the actual file headers using `hexedit accounts.xlsx`, i notice that they are `50 48 04 03`, which is the magic number for `zip` files. i quickly change the numbers to `50 4B 03 04` and save the changes using `CTRL+S`.
 
 After viewing the repaired `accounts.xlsx` using `vd`, i get the following table:
-![](../../../Images/HTB_Images/Machines/Easy/EscapeTwo.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Easy/EscapeTwo.png)
 
 I save each of these entries in a `user.txt` file:
 ```bash
@@ -346,7 +346,7 @@ MATCH (n:User {name: "RYAN@SEQUEL.HTB"})-[r]->(m)
 RETURN n, r, m
 ```
 Or more easily, going to search and searching for `user:ryan`, and by clicking `Outbound Object Control`. Viewing `ryans` outgoing privileges reveals something interesting:
-![](../../../Images/HTB_Images/Machines/Easy/EscapeTwo2.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Easy/EscapeTwo2.png)
 
 This reveals that `ryan` has the `WriteOwner` permission over the `ca_svc` account (`Certificate Authority Service`: a service account which is typically used to manage `Windows Certificates`). When clicking on `WriteOwner`, `bloodhound` reveals that i can do the following attacks:
 

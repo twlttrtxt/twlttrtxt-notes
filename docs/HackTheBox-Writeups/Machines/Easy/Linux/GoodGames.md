@@ -88,7 +88,7 @@ This took too long as the database also stored all comments written on the page.
 sqlmap -r request.req --batch -D main -T user --dump
 ```
 This gave me the following output:
-![](../../../Images/HTB_Images/Machines/Easy/GoodGames.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Easy/GoodGames.png)
 
 [Crackstation](https://crackstation.net/) told me that the password to this `MD5` hash is `superadministrator`!
 

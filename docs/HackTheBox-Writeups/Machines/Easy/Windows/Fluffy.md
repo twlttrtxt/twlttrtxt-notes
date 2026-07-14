@@ -3,7 +3,7 @@ tags:
   - Windows
   - SMB
   - CVE
-  - bloodhound
+  - DACL Abuse
   - ADCS
 ---
 
@@ -183,17 +183,19 @@ Looking at the `Outbound Object Control` of the `SERVICE ACCOUNTS` group, it is 
 - `Shadow Credentials attack`: Edits the `msDS-KeyCredentialLink` attribute, so that i can use my own cryptographic key to authenticate as that service using `Windows Hello`-like features.
 
 This is the whole attack chain from `P.AGILA` to `REMOTE MANAGEMENT USERS`:
-![](../../../Images/HTB_Images/Machines/Easy/Fluffy.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Easy/Fluffy.png)
 
 These are the two steps required to gain `winrm` access:
 
-1. Add `p.agila` to the `SERVICE ACCOUNTS` group. As `p.agila` has full access to this group (`GenericAll`), it is not required to change her permissions, and she can instantly be added using `samba`'s `net` tool:
+- Add `p.agila` to the `SERVICE ACCOUNTS` group. As `p.agila` has full access to this group (`GenericAll`), it is not required to change her permissions, and she can instantly be added using `samba`'s `net` tool:
 
 ```bash
 net rpc group addmem "SERVICE ACCOUNTS" p.agila -U fluffy.htb/p.agila --password='prometheusx-303' -S fluffy.htb
 ```
 
-2. Abuse `GenericWrite` over the user `WINRM_SVC` to get his `NTHash` via an `Shadow Credentials Attack`. Usually this attack is performed using the combination of the tools `pywhisker.py` and `gettgtpkinit.py`, but i simply use `certipy` to automate this process. Before using it, i need to execute these commands to synchronize my system time to the target, so that i do not get `Kerberos` errors:
+- Abuse `GenericWrite` over the user `WINRM_SVC` to get his `NTHash` via an `Shadow Credentials Attack`. Usually this attack is performed using the combination of the tools `pywhisker.py` and `gettgtpkinit.py`, but i simply use `certipy` to automate this process. 
+
+Before using it, i need to execute these commands to synchronize my system time to the target, so that i do not get `Kerberos` errors:
 
 ```bash
 sudo timedatectl set-ntp off
@@ -232,10 +234,10 @@ type $env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.tx
 But the history file was not there for this user.
 
 Due to the presence of the `CA_SVC` (`Certificate Authority Service-`) account, i had a reason to believe that certificate services were being used on this server. To see if there are any mis-configured ones, i must enumerate them using `certipy`. To do so , i require the account of `CA_SVC`, as he is part of the `CERT PUBLISHERS` group which is allowed to view the certificate templates. As seen previously, the `SERVICE ACCOUNTS` group has `GenericWrite` permissions over this account, which is why i can perform a `Shadow Credentials attack` on the `ca_svc` account. I could do this again using the account `p.agila`, but instead I've used the hash of the `winrm_svc`. Executing this command gives me the `NT Hash` file of `ca_svc`:
- ```bash
+```bash
 certipy shadow auto -u winrm_svc@fluffy.htb -hashes '33bd09dcd697600edf6b3a7af4875767' -account 'ca_svc'
- ```
- This gives me the `NT_HASH` of `ca_svc`: `ca0f4f9e9eb8a092addf53bb03fc98c8`!
+```
+This gives me the `NT_HASH` of `ca_svc`: `ca0f4f9e9eb8a092addf53bb03fc98c8`!
 
 I can now use that to enumerate the vulnerabilities of the certificate templates:
 ```bash

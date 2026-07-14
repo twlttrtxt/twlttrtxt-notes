@@ -1,7 +1,7 @@
 ---
 tags:
   - Windows
-  - bloodhound
+  - DACL Abuse
   - FTP
   - Kerberoast
   - DCSync
@@ -266,7 +266,7 @@ evil-winrm -i administrator.htb -u "administrator.htb\emily" -p 'UXLCI5iETUsIBoF
 
 ### Privilege Escalation
 When investigating `emily's` `Outbound Object Controls`, i see that she has `GenericWrite` permissions over the `Ethan` account. The `ethan` account on the other hand, has the `DS-Replication-Get-Changes` and the `DS-Replication-Get-Changes-All` permissions on the domain, which allows him to do a `DCSync` attack:
-![](../../../Images/HTB_Images/Machines/Medium/Administrator.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Medium/Administrator.png)
 This can eventually lead to `Administrator` access to this machine!
 
 The `DCSync` attack abuses the mechanism that domain controllers use to keep their databases synchronized. If an account is given these rights, he can ask the system for it's user database without being an domain controller! In this scenario, `ethan` has this right.

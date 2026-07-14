@@ -164,7 +164,7 @@ nxc smb cicada.htb -u 'cicada.htb\michael.wrightson' -p 'Cicada$M6Corpb*@Lp#nZp!
 This tells me that `michael` can additionally `READ` the `NETLOGON` and `SYSVOL` share, but they do not hold any interesting information.
 
 The same scan with the `--users` flag does hold interesting information though:
-![](../../../Images/HTB_Images/Machines/Easy/Cicada.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Easy/Cicada.png)
 
 This reveals the new set of credentials:
 `cicada.htb\david.orelious:aRt$Lp#7t*VQ!3`.

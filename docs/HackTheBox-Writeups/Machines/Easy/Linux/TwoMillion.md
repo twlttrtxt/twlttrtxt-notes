@@ -67,7 +67,7 @@ The `verifyInviteCode` is not as interesting, as the `js` clear-text code is alr
 `makeInviteCode` on the other hand is a bit more interesting, as it reveals a new endpoint. It sends a `POST` request to the endpoint `/api/v1/invite/how/to/generate` without `POST` data.
 
 To make use of this hidden function, i make use of the `Console` tab in the developer options, as that allows me to invoke that method:
-![](../../../Images/HTB_Images/Machines/Easy/TwoMillion.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Easy/TwoMillion.png)
 
 This returns the following `javascript object`:
 ```json

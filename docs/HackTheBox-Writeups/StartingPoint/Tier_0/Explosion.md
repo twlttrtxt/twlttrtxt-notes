@@ -144,7 +144,7 @@ xfreerdp3 /u:Administrator /p: /w:1366 /h:768 /v:$IP
 ```
 
 There, you can then open and read the flag on the desktop:
-![](../../../Images/HTB_Images/StartingPoint/Explosion.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Explosion.png)
 
 ### Summary
 

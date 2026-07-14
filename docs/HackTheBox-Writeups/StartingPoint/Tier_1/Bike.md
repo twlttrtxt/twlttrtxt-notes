@@ -38,7 +38,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 This is a very standard set of ports in any HTB machine, as it probably includes a `http` service mis-configuration which enables us to connect via `ssh` with the found credentials.
 
 When visiting the web page in `firefox`, i am greeted with a form which asks for a email. When inputting anything, another text appears with `We will contact you at: anything`. When any user input is reflected upon the web page, you might look into `XSS` (inject custom `javascript` which gets executed) attacks or `SSTI` (the input is being used in a templating engine, inject executable logic) attacks.
-![](../../../Images/HTB_Images/StartingPoint/Bike.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Bike.png)
 
 This shows that `XSS` will probably not work, as the `<b>` tags are reflected, and do not turn the `anything` bold.
 

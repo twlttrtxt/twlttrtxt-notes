@@ -82,7 +82,7 @@ The interesting sub directory is `dashboard`, as that is not typical for a such 
 At this `login.php`, i remembered the username and password list i have found earlier. And because i already have `burpsuite` open, i use the integrated intruder to try all combinations of credentials against this login page (a.k.a. credential stuffing attack). 
 For this, i login with the credentials `name:pass` and intercept the request to forward it to the intruder. After that, i select the `Cluster bomb attack` (uses all combinations, unlike `Pitchfork attack`) from the attack type, and add the `§name§` and `§pass§` symbols. At the payload positions i add the username list for the `§name§` position, and the password list for the `§pass§` position.
 This image shows a short checklist of all things you must check:
-![](../../../Images/HTB_Images/StartingPoint/Crocodile.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Crocodile.png)
 
 This gives me the correct login (the one which gives me a status code `302`), which i then use to obtain the flag after logging in!
 

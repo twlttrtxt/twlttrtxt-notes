@@ -141,7 +141,7 @@ When inspecting the executed commands for a while i only notice a `CRON` job whi
 As this command uses the full path to `/root/bin/cleanup.pl`, i cannot hijack the path, as the shell will not look into the `$PATH` variable, due to the full path being specified.
 
 The next thing i tried was logging on via `ssh` on another window to see if some event gets triggered when someone logs on via `ssh`. And something actually happens:
-![](../../../Images/HTB_Images/Machines/Easy/Writeup.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Easy/Writeup.png)
 
 As it may be a bit too small to read, the following command gets executed when someone logs in:
 ```bash

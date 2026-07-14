@@ -102,7 +102,7 @@ hydra -l admin -P 10k-most-common.txt ignition.htb http-post-form "/admin:form_k
 ```
 
 The output of this command shows us this:
-![](../../../Images/HTB_Images/StartingPoint/Ignition.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Ignition.png)
 
 It is visible that after ~25 minutes, it started saying that each combination is correct. I have looked at the web page to see why this happened and saw that the `admin` cookie expired before `hydra` finished. Either it was too slow, or the word list was too long for this exact scenario.
 
@@ -126,7 +126,7 @@ When starting this scan, it is clearly visible that `ffuf` is more suited for we
 
 This still gave me the same problem as with `hydra`, which lets me know that the password file is too long. To make it shorter, i can rule out any passwords which are not even usable on `Magento`. A quick google search on its password requirements tell me that admin password must be at least 7 characters long. 
 I could manually count the characters of each entry out of the 10.000 and delete the entries which are too long, but luckily, a tool exists for that in linux called `awk`. To display the line count of a file, `wc` can be used to find out how much slimmer the file has gotten!
-![](../../../Images/HTB_Images/StartingPoint/Ignition2.png)
+![](/twlttrtxt-notes/Images/HTB_Images/StartingPoint/Ignition2.png)
 
 The new file is almost 60% smaller! Using this new file, i issue the previous `ffuf` scan again.
 When this did not work either, i decided to have a peek at the hints of the challenge. There was a question to google the most common passwords of 2023, which made me stumble upon a top 10 list. The required password was in that list (but also in my shortened down `short-most-common.txt`, so brute forcing does not work).

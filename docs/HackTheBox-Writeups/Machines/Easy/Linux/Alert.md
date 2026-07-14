@@ -128,7 +128,7 @@ In this modified `test.md`, i added the following things:
 - `SSTI`-payloads `{{7*7}}` and `${7*7}`: to see if a scripting engine is used in the back-end which evaluates my input
 
 And this was the result:
-![](../../../Images/HTB_Images/Machines/Easy/Alert.png)
+![](/twlttrtxt-notes/Images/HTB_Images/Machines/Easy/Alert.png)
 
 Sadly, the `SSTI` payloads did not execute, but the `Hel` gets displayed as bold text, and the Debugger console shows the message `XSS!`, which means it executed!
 
