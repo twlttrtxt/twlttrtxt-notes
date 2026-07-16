@@ -1,5 +1,10 @@
 # Changelog
 
+### Jul 16, 2026
+
+- Added writeup on `Timelapse`.
+- Added writeup on `Return`.
+
 ### Jul 15, 2026
 
 - Small fixes in Writeups.
